@@ -1,11 +1,9 @@
-import './App.css';
-
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <h1>Netflix GPT</h1>
+    <div>
+
     </div>
-  );
+  )
 }
 
 export default App;
