@@ -1,9 +1,11 @@
-const App = () => {
-  return (
-    <div>
+import Body from './components/Body';
 
-    </div>
+const App = () => {
+
+  return (
+    <Body />
   )
-}
+
+};
 
 export default App;
