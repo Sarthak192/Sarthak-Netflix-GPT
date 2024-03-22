@@ -1,54 +1,59 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useState, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
 import { auth } from "../utils/firebase";
 import { checkValidDataSignin, checkValidDataSignup } from "../utils/validate";
 import Header from "./Header";
 
 const Login = () => {
 
-  const [isSignInForm, setIsSignInForm] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(null)
+  const navigate = useNavigate();
 
-  const name = useRef(null);
-  const email = useRef(null);
-  const password = useRef(null);
+  const [ isSignInForm, setIsSignInForm ] = useState( true );
+  const [ errorMessage, setErrorMessage ] = useState( null );
+
+  const name = useRef( null );
+  const email = useRef( null );
+  const password = useRef( null );
 
   const toggleSignInForm = () => {
-    setIsSignInForm(!isSignInForm);
-    setErrorMessage(null)
-  }
+    setIsSignInForm( !isSignInForm );
+    setErrorMessage( null );
+  };
 
-  const handleButtonClick = (e) => {
+  const handleButtonClick = ( e ) => {
     e.preventDefault();
-    const message = isSignInForm ? checkValidDataSignin(email.current.value, password.current.value) : checkValidDataSignup(email.current.value, password.current.value, name.current.value)
-    setErrorMessage(message)
-    if (!message) {
-      if (!isSignInForm) {
-        createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
-          .then((userCredential) => {
+    const message = isSignInForm ? checkValidDataSignin( email.current.value, password.current.value ) : checkValidDataSignup( email.current.value, password.current.value, name.current.value );
+    setErrorMessage( message );
+    if ( !message ) {
+      if ( !isSignInForm ) {
+        createUserWithEmailAndPassword( auth, email.current.value, password.current.value )
+          .then( ( userCredential ) => {
             const user = userCredential.user;
-            console.log(user)
-          })
-          .catch((error) => {
+            console.log( user );
+            navigate( '/browse' );
+          } )
+          .catch( ( error ) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            setErrorMessage(`${errorCode}-${errorMessage}`)
-          });
+            setErrorMessage(` ${ errorCode }-${ errorMessage }` );
+          } );
       }
       else {
-        signInWithEmailAndPassword(auth, email.current.value, password.current.value)
-          .then((userCredential) => {
+        signInWithEmailAndPassword( auth, email.current.value, password.current.value )
+          .then( ( userCredential ) => {
             const user = userCredential.user;
-            console.log(user)
+            console.log( user );
+            navigate( '/browse' );
           })
-          .catch((error) => {
+          .catch( ( error ) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            setErrorMessage(`${errorCode}-${errorMessage}`)
+            setErrorMessage( `${ errorCode }-${ errorMessage }` );
           });
       }
     }
-  }
+  };
 
   return (
     <div>
@@ -68,7 +73,7 @@ const Login = () => {
         <p className="py-4 cursor-pointer" onClick={toggleSignInForm}>{isSignInForm ? "New to Netflix? Sign Up Now" : "Already registered? Sign In Now."}</p>
       </form>
     </div>
-  )
+  );
 
 };
 

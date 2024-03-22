@@ -4,7 +4,7 @@ const Browse = () => {
     <div>
 
     </div>
-  )
+  );
 
 };
 
