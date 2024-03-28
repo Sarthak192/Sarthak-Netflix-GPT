@@ -9,7 +9,7 @@ import Login from './Login';
 
 const Body = () => {
 
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
 
   const router = createBrowserRouter( [
     {
@@ -25,10 +25,10 @@ const Body = () => {
   useEffect( () => {
     onAuthStateChanged( auth, ( user ) => {
       if ( user ) {
-        const { uid, email, displayName } = user;
-        dispath( addUser( { uid, email, displayName } ) );
+        const { uid, email, displayName, photoURL } = user;
+        dispatch( addUser( { uid, email, displayName, photoURL } ) );
       } else {
-        dispath( removeUser() );
+        dispatch( removeUser() );
       }
     } )
   }, [] );

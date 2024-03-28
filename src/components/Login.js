@@ -1,6 +1,8 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useState, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
+import { addUser } from "../slice/userSlice";
 import { auth } from "../utils/firebase";
 import { checkValidDataSignin, checkValidDataSignup } from "../utils/validate";
 import Header from "./Header";
@@ -8,6 +10,7 @@ import Header from "./Header";
 const Login = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [ isSignInForm, setIsSignInForm ] = useState( true );
   const [ errorMessage, setErrorMessage ] = useState( null );
@@ -30,8 +33,15 @@ const Login = () => {
         createUserWithEmailAndPassword( auth, email.current.value, password.current.value )
           .then( ( userCredential ) => {
             const user = userCredential.user;
-            console.log( user );
-            navigate( '/browse' );
+            updateProfile( user, {
+              displayName: name.current.value, photoURL: "https://play-lh.googleusercontent.com/NUfCO2kD6ws3q0SQ3-sYdyzFzjR_sJTW3unilh0GjuMIpBIjARZQLA0HUisItVEJUZ3L=w240-h480-rw"
+            } ).then( () => {
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch( addUser( { uid, email, displayName, photoURL } ) );
+              navigate( '/browse' );
+            } ).catch( ( error ) => {
+              setErrorMessage( error );
+            } );
           } )
           .catch( ( error ) => {
             const errorCode = error.code;
