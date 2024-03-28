@@ -29,13 +29,13 @@ const Body = () => {
         dispatch( addUser( { uid, email, displayName, photoURL } ) );
       } else {
         dispatch( removeUser() );
-      }
-    } )
+      };
+    } );
   }, [] );
 
   return (
     <div>
-      <RouterProvider router={router} />
+      <RouterProvider router={ router } />
     </div>
   );
 
