@@ -1,15 +1,14 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { addUser } from '../slice/userSlice';
+import { USER_AVATAR } from '../utils/constants';
 import { auth } from '../utils/firebase';
 import { checkValidDataSignin, checkValidDataSignup } from '../utils/validate';
 import Header from './Header';
 
 const Login = () => {
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [ isSignInForm, setIsSignInForm ] = useState( true );
@@ -34,11 +33,10 @@ const Login = () => {
           .then( ( userCredential ) => {
             const user = userCredential.user;
             updateProfile( user, {
-              displayName: name.current.value, photoURL: 'https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png'
+              displayName: name.current.value, photoURL: USER_AVATAR
             } ).then( () => {
               const { uid, email, displayName, photoURL } = auth.currentUser;
               dispatch( addUser( { uid, email, displayName, photoURL } ) );
-              navigate( '/browse' );
             } ).catch( ( error ) => {
               setErrorMessage( error );
             } );
@@ -54,7 +52,6 @@ const Login = () => {
           .then( ( userCredential ) => {
             const user = userCredential.user;
             console.log( user );
-            navigate( '/browse' );
           })
           .catch( ( error ) => {
             const errorCode = error.code;
